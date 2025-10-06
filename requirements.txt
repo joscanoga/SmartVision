@@ -1,0 +1,12 @@
+jupyterlab
+tensorflow
+torch
+torchvision
+torchaudio
+pandas
+scikit-learn
+matplotlib
+seaborn
+psycopg2-binary
+sqlalchemy
+statsmodels

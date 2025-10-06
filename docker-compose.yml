@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  jupyterlab:
+    build:
+      context: .
+    container_name: jupyterlab_gpu
+    ports:
+      - "8888:8888"
+    volumes:
+      # Monta el directorio actual (donde está este docker-compose) en /app dentro del contenedor.
+      # Esto permite que los cambios en tus notebooks se reflejen inmediatamente en tu máquina local.
+      - .:/app
+    command: >
+      jupyter lab --ip=0.0.0.0 --port=8888 --allow-root --no-browser
+      --ServerApp.token=''
+      --ServerApp.password=''
+      --ServerApp.disable_check_xsrf=True
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
