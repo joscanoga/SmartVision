@@ -10,3 +10,7 @@ seaborn
 psycopg2-binary
 sqlalchemy
 statsmodels
+opencv-python
+numpy
+opencv-python-headless
+scikit-image

@@ -12,6 +12,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
     python3.10 \
     python3-pip \
+    ffmpeg \
+    libsm6 \
+    libxext6 \
+    libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Copia el archivo de requerimientos al contenedor

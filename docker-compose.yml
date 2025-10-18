@@ -3,7 +3,7 @@ services:
   jupyterlab:
     build:
       context: .
-    container_name: jupyterlab_gpu
+    container_name: jupyterlab_gpu_VXC
     ports:
       - "8888:8888"
     volumes:
