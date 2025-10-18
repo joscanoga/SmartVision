@@ -1,24 +1,29 @@
-# Entorno de Desarrollo con JupyterLab y Soporte para GPU
+# Entorno de Desarrollo con JupyterLab (Soporte Opcional para GPU)
 
-Este directorio contiene la configuración necesaria para crear un entorno de desarrollo para ciencia de datos y machine learning utilizando JupyterLab, Docker y Docker Compose, con soporte para GPUs NVIDIA.
+Este directorio contiene la configuración necesaria para crear un entorno de desarrollo para ciencia de datos y machine learning utilizando JupyterLab, Docker y Docker Compose, con soporte opcional para GPUs NVIDIA.
 
 ## Descripción General
 
-El objetivo de este proyecto es proporcionar un entorno de desarrollo reproducible y aislado que aproveche la aceleración por hardware de las GPUs NVIDIA para el entrenamiento de modelos de inteligencia artificial.
+El objetivo de este proyecto es proporcionar un entorno de desarrollo reproducible y aislado. Opcionalmente, puede aprovechar la aceleración por hardware de las GPUs NVIDIA para el entrenamiento de modelos de inteligencia artificial.
 
-El entorno incluye:
+El entorno base incluye:
 - JupyterLab como IDE interactivo.
 - Python 3.10.
 - Librerías populares de ciencia de datos como TensorFlow, PyTorch, Pandas, y Scikit-learn.
-- Soporte para CUDA y cuDNN a través de las imágenes base de NVIDIA.
+- Soporte para CUDA y cuDNN a través de las imágenes base de NVIDIA (opcional, si se habilita el soporte para GPU).
 
 ## Prerrequisitos
 
 Antes de comenzar, asegúrate de tener instalado lo siguiente en tu sistema:
 
 1.  **Docker y Docker Compose**: Para construir y gestionar los contenedores. [Instrucciones de instalación de Docker](https://docs.docker.com/get-docker/).
-2.  **NVIDIA GPU Drivers**: Drivers actualizados para tu tarjeta gráfica NVIDIA.
-3.  **NVIDIA Container Toolkit**: Permite a Docker interactuar con las GPUs. [Instrucciones de instalación](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html).
+
+### Soporte Opcional para GPU (NVIDIA)
+
+Si deseas utilizar la GPU de tu equipo, asegúrate de tener instalado lo siguiente:
+
+1.  **NVIDIA GPU Drivers**: Drivers actualizados para tu tarjeta gráfica NVIDIA.
+2.  **NVIDIA Container Toolkit**: Permite a Docker interactuar con las GPUs. [Instrucciones de instalación](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html).
 
 ## Cómo Usar
 
@@ -26,7 +31,7 @@ Sigue estos pasos para levantar el entorno de JupyterLab:
 
 ### 1. Construir e Iniciar el Contenedor
 
-Abre una terminal en este directorio (`notebooks`) y ejecuta el siguiente comando:
+Abre una terminal en este directorio y ejecuta el siguiente comando:
 
 ```bash
 docker compose up --build
@@ -40,6 +45,23 @@ Para ejecutar el contenedor en segundo plano (detached mode), puedes usar:
 ```bash
 docker compose up -d
 ```
+
+### Habilitar Soporte para GPU (Opcional)
+
+Si tienes una GPU NVIDIA y deseas utilizarla, descomenta las siguientes líneas en el archivo `docker-compose.yml`:
+
+```yaml
+# Descomentar en el caso de tener GPU nvidia en el equipo y desee usarla
+    deploy:
+      resources:
+        reservaciones:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+```
+
+Después de descomentar las líneas, guarda el archivo `docker-compose.yml` y vuelve a construir e iniciar el contenedor con `docker compose up --build`.
 
 ### 2. Acceder a JupyterLab
 

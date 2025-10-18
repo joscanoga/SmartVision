@@ -15,10 +15,11 @@ services:
       --ServerApp.token=''
       --ServerApp.password=''
       --ServerApp.disable_check_xsrf=True
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+    # Descomentar en el caso de tener GPU nvidia en el equipo y desee usarla
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
