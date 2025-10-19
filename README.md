@@ -93,3 +93,52 @@ Este comando detendrá y eliminará el contenedor, pero tus archivos de notebook
 ## Persistencia de Datos
 
 El archivo `docker-compose.yml` está configurado para montar el directorio  (`./notebooks`) en la ruta `/app` dentro del contenedor. Esto significa que cualquier archivo o notebook que crees o modifiques dentro de JupyterLab se guardará directamente en esta carpeta en tu máquina local.
+
+```mermaid
+classDiagram
+    class Item {
+        -String id
+        -String title
+        -String category
+        -String condition
+        -int availableQuantity
+        -String description
+        -String warranty
+        -String returnPolicy
+        -Price price
+        -Seller seller
+        -RatingSummary ratings
+        -Shipping shipping
+        -List~Picture~ pictures
+        -Map~String, String~ attributes
+    }
+    class Price {
+        -String currency
+        -long amount
+        -long originalAmount
+        -int decimals
+    }
+    class Seller {
+        -String id
+        -String nickname
+    }
+    class RatingSummary {
+        -double average
+        -int count
+    }
+    class Shipping {
+        -boolean freeShipping
+        -String method
+        -String deliveryEstimate
+    }
+    class Picture {
+        -String id
+        -String url
+    }
+
+    Item "1" *-- "1" Price : contains
+    Item "N" *-- "1" Seller : soldBy
+    Item "1" *-- "1" RatingSummary : has
+    Item "1" *-- "1" Shipping : shipsWith
+    Item "1" *-- "N" Picture : has
+```
