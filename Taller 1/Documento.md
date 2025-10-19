@@ -30,7 +30,27 @@ Para la calibracion de la camara se siguio la guia de GeeksforGeeks (s.f.), con 
   </tr>
 </table>
 
+El objetivo de calibrar camara es poder obtener las estimaciones de los parametros que convierte una coordenasa en el mundo real (3D) en una coordenasa de un pixel en la imagen (2D). Para esto se hayo la matriz de la camara y los coeficientes de distorción.
 
+**Tabla 1:** Matriz Intrínseca (K) de la Cámara Calibrada.
+
+$$
+\mathbf{K} = \begin{pmatrix}
+1540.2 & 0 & 960.5 \\
+0 & 1538.9 & 540.3 \\
+0 & 0 & 1
+\end{pmatrix}
+$$
+
+$$
+\mathbf{D} = \begin{pmatrix}
+-0.125 & 0.04 & 0.001 & 0.0005 & 0
+\end{pmatrix}
+$$
+
+<p align="center">
+    <strong>Ecuación 1:</strong> Coeficientes de Distorsión Radial ($k_1, k_2, k_3$) y Tangencial ($p_1, p_2$).
+</p>
 
 
 ## Referencias
