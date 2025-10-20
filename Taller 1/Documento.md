@@ -149,7 +149,7 @@ Este proceso de post-procesamiento asegura que el número final de objetos conta
 
 Finalmente para que las mediciones tuvieran validez en el mundo real, se implementó un sistema de calibración de escala. Se tomó como referencia el diámetro promedio de una flor de orquídea, establecido en 10 cm según la literatura consultada (Jardín Botánico de Medellín, 2024). El script mide este diámetro de referencia en píxeles y calcula un factor de conversión **(píxeles por centímetro)**. Finalmente, el área de cada objeto detectado, inicialmente calculada en píxeles con `cv2.contourArea()`, se convierte a **centímetros cuadrados (cm²)** utilizando esta escala.
 
-![Imagen de las flores utilizadas en el análisis](images/Flores.jpg)
+![Imagen de las flores utilizadas en el análisis y resultados](images/DashBoardFlores.png)
 
 ### Análisis de Resultados
 ***
