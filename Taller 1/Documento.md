@@ -274,6 +274,8 @@ transformar_imagen("../images/Imagen_gif.jpeg", "transformaciones.gif")
 
 ### **Resultados**
 
+![Secuencia de Transformaciones Geométricas](Notebooks/transformaciones.gif)
+
 - Se generó correctamente el archivo **`transformaciones.gif`**, mostrando la secuencia de transformaciones aplicadas sobre la imagen original.  
 - Los frames intermedios fueron almacenados en la carpeta **`frames_temp`**, permitiendo su inspección individual.
 - El movimiento obtenido refleja un cambio progresivo en posición, tamaño y orientación de la figura, generando una animación fluida y continua.
