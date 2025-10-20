@@ -123,7 +123,7 @@ La corrección de la distorsión radial se evaluó con especial atención en las
 
 ## 3. Implementar y aplicar transformaciones de rotación y traslación
 
-# 3. Implementar y aplicar transformaciones de rotación y traslación.
+
 
 Creen una función que:
 
@@ -203,17 +203,12 @@ Además, incluye una verificación para evitar volver a ejecutar la función si 
 ### 🧩 Código fuente
 
 ```python
-from PIL import Image
-import imageio
-import os
-import numpy as np
-
 def transformar_imagen(ruta_imagen, salida_gif="animacion.gif"):
     carpeta_frames = "frames_temp"
 
-    # 🚫 Si ya existen los resultados, no ejecutar la función
+    #  Si ya existen los resultados, no ejecutar la función
     if os.path.exists(carpeta_frames) and os.path.exists(salida_gif):
-        print("⚠️ Las carpetas y el GIF ya existen. No se ejecutará la función.")
+        print("Las carpetas y el GIF ya existen. No se ejecutará la función.")
         return
 
     # Crear carpeta temporal para los frames (solo si no existe)
@@ -265,10 +260,12 @@ def transformar_imagen(ruta_imagen, salida_gif="animacion.gif"):
     # Crear GIF con loop infinito
     imageio.mimsave(salida_gif, frames, duration=0.5, loop=0)
 
-    print(f"✅ GIF generado correctamente: {salida_gif}")
-    print(f"📂 Frames guardados en: {os.path.abspath(carpeta_frames)}")
+    print(f" GIF generado correctamente: {salida_gif}")
+    print(f" Frames guardados en: {os.path.abspath(carpeta_frames)}")
 
-# Ejemplo de uso
+# Ejemplo de uso 
+# Primer parametro : Direccion de la imagen (Utilizaremos la imagen guardada en la carpeta images llamada 'Imagen_gif.jpeg' para utilzar otra simplemente cambiar la ruta)
+# Segundo parametro : Como se llamara el gif (Importante poner .gif al final)
 transformar_imagen("../images/Imagen_gif.jpeg", "transformaciones.gif")
 
 ```
