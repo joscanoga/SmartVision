@@ -130,7 +130,7 @@ Comparar y analizar el efecto de transformaciones de intensidad a nivel de píxe
 4. Implementar ajuste de contraste en grises (centrado en 128 y escalado), visualizar resultados.
 5. Aplicar corrección gamma en grises con gamma <1 y >1 para observar aclarado/oscurecimiento.
 6. Implementar operaciones aritméticas pixel a pixel: suma, resta, multiplicación y división (con protecciones numéricas).
-7. Repetir pasos(3-7) en el dominio RGB aplicando operaciones por canal y recombinar.
+7. Repetir pasos(3-7) en el dominio RGB aplicando operaciones por canal .
 
 ### Código y funciones clave (referencia)
 Las funciones y pasos principales se encuentran en el notebook `Taller1.ipynb`. A modo de referencia rápida:
