@@ -123,78 +123,84 @@ La corrección de la distorsión radial se evaluó con especial atención en las
 
 ## 3. Implementar y aplicar transformaciones de rotación y traslación
 
-Carguen una imagen, apliquen 5–8 transformaciones sucesivas (traslaciones, rotaciones, escalas), generen un **GIF animado o video** mostrando la secuencia y guarden cada frame intermedio.
+# 3. Implementar y aplicar transformaciones de rotación y traslación.
+
+Creen una función que:
+
+* **Cargue una imagen**
+* **Aplique 5-8 transformaciones sucesivas** (traslaciones, rotaciones, escalas)
+* **Genere un GIF animado o video** mostrando la secuencia
+* **Guarden cada frame intermedio**
+
+
+---
+### Contexto
+
+En el **procesamiento digital de imágenes**, las **transformaciones geométricas** son operaciones que permiten modificar la posición, orientación o tamaño de los objetos dentro de una imagen. Entre las más comunes se encuentran la **traslación**, la **rotación** y la **escala**.
+
+Estas operaciones son fundamentales en áreas como **visión por computador**, **gráficos por computadora** y **robótica**, donde es necesario manipular imágenes para análisis, reconstrucción o animación.
+
+El objetivo de este ejercicio es implementar un programa en **Python** que cargue una imagen, aplique una serie de transformaciones geométricas sucesivas y genere un **GIF animado** que muestre la secuencia de transformaciones aplicadas.
 
 ---
 
-### **Solución**
+### Fundamento Teórico
 
-Para este punto se desarrolló una función en **Python** que aplica una serie de transformaciones geométricas —rotación, traslación y escala— sobre una imagen base, generando una secuencia de frames y un **GIF animado** que muestra el proceso de transformación paso a paso.
 
----
+Las transformaciones geométricas son operaciones fundamentales en el **procesamiento digital de imágenes**, ya que permiten modificar la posición, orientación o tamaño de los objetos dentro de una escena.
 
-### **Fundamento Teórico**
+### a. Traslación:
 
-Las transformaciones geométricas son operaciones fundamentales en el procesamiento digital de imágenes, ya que permiten modificar la posición, orientación o tamaño de los objetos dentro de una escena.
+Desplaza una imagen una distancia $(t_x, t_y)$ sobre los ejes $X$ y $Y$:
 
-**a. Traslación:**  
-Desplaza una imagen una distancia \((t_x, t_y)\) sobre los ejes X y Y:
+$$x' = x + t_x, \quad y' = y + t_y$$
 
-\[
-x' = x + t_x, \quad y' = y + t_y
-\]
+### b. Rotación:
 
-**b. Rotación:**  
-Gira la imagen un ángulo \(\theta\) respecto a un punto de referencia:
+Gira la imagen un ángulo $\theta$ respecto a un punto de referencia:
 
-\[
-\begin{bmatrix}
-x' \\ y'
-\end{bmatrix}
-=
-\begin{bmatrix}
-\cos(\theta) & -\sin(\theta) \\
-\sin(\theta) & \cos(\theta)
-\end{bmatrix}
-\begin{bmatrix}
-x \\ y
-\end{bmatrix}
-\]
+$$\begin{bmatrix} x' \\ y' \end{bmatrix} = \begin{bmatrix} \cos(\theta) & -\sin(\theta) \\ \sin(\theta) & \cos(\theta) \end{bmatrix} \begin{bmatrix} x \\ y \end{bmatrix}$$
 
-**c. Escalamiento:**  
-Aumenta o reduce el tamaño de una imagen según un factor \(s\):
+### c. Escalamento:
 
-\[
-x' = s_x \cdot x, \quad y' = s_y \cdot y
-\]
+Aumenta o reduce el tamaño de una imagen según un factor $s$:
 
-Combinadas, estas operaciones permiten realizar transformaciones afines que preservan las líneas y proporciones de la imagen original.
+$$x' = s_x \cdot x, \quad y' = s_y \cdot y$$
 
----
+Combinadas, estas operaciones permiten realizar **transformaciones afines** que preservan las líneas y proporciones de la imagen original.
 
-### **Metodología**
 
-Se utilizó **Python 3** con las librerías **Pillow (PIL)** e **ImageIO** para el procesamiento y la generación del GIF.  
-El flujo de trabajo general fue el siguiente:
+
+### Metodología
 
 1. **Carga de la imagen original:**  
-   Se abre y convierte la imagen a modo RGBA para permitir transparencia y manipulación de capas.
+   Se utilizó la librería `PIL` para abrir y convertir la imagen a formato RGBA, garantizando compatibilidad con transparencia.
 
-2. **Definición de las transformaciones:**  
-   Se estableció una lista de transformaciones que incluyen diferentes ángulos de rotación, desplazamientos (traslaciones) y factores de escala.
+2. **Definición de transformaciones:**  
+   Se definió una lista de diccionarios con los parámetros de **rotación (rot)**, **traslación (tx, ty)** y **escala (scale)** para cada paso sucesivo.
 
-3. **Aplicación de transformaciones sucesivas:**  
-   Cada transformación se aplica sobre la imagen original. Luego, la imagen transformada se coloca sobre un fondo blanco para mantener consistencia visual.
+3. **Aplicación secuencial:**  
+   Para cada transformación:
+   - Se reescaló la imagen.
+   - Se rotó según el ángulo indicado.
+   - Se pegó sobre un fondo blanco, ajustando la posición con traslación.
 
-4. **Generación y almacenamiento de frames:**  
-   Cada paso se guarda como un frame en formato PNG dentro de una carpeta temporal (`frames_temp`).
+4. **Generación de frames:**  
+   Cada imagen transformada se guardó como `frame_XX.png` en la carpeta `frames_temp/`.
 
-5. **Creación del GIF animado:**  
-   Los frames se combinan con `imageio.mimsave()` para formar un GIF con duración de 0.5 segundos por frame y bucle infinito.
+5. **Creación del GIF:**  
+   Finalmente, con `imageio.mimsave()` se combinan los cuadros en un GIF animado llamado **`transformaciones.gif`**.
 
 ---
 
-### **Código Implementado**
+### Código Implementado
+
+El siguiente script en Python aplica **transformaciones geométricas** (rotación, traslación y escalamiento) a una imagen para generar un **GIF animado**.  
+Además, incluye una verificación para evitar volver a ejecutar la función si los resultados ya existen.
+
+---
+
+### 🧩 Código fuente
 
 ```python
 from PIL import Image
@@ -205,9 +211,9 @@ import numpy as np
 def transformar_imagen(ruta_imagen, salida_gif="animacion.gif"):
     carpeta_frames = "frames_temp"
 
-    # Si ya existen los resultados, no ejecutar la función
+    # 🚫 Si ya existen los resultados, no ejecutar la función
     if os.path.exists(carpeta_frames) and os.path.exists(salida_gif):
-        print("Las carpetas y el GIF ya existen. No se ejecutará la función.")
+        print("⚠️ Las carpetas y el GIF ya existen. No se ejecutará la función.")
         return
 
     # Crear carpeta temporal para los frames (solo si no existe)
@@ -259,11 +265,12 @@ def transformar_imagen(ruta_imagen, salida_gif="animacion.gif"):
     # Crear GIF con loop infinito
     imageio.mimsave(salida_gif, frames, duration=0.5, loop=0)
 
-    print(f"GIF generado correctamente: {salida_gif}")
-    print(f"Frames guardados en: {os.path.abspath(carpeta_frames)}")
+    print(f"✅ GIF generado correctamente: {salida_gif}")
+    print(f"📂 Frames guardados en: {os.path.abspath(carpeta_frames)}")
 
 # Ejemplo de uso
 transformar_imagen("../images/Imagen_gif.jpeg", "transformaciones.gif")
+
 ```
 
 ---
