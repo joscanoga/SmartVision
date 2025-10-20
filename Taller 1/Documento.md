@@ -120,6 +120,68 @@ Al ser valores tan pequeños, esto demuestra una alineación física casi perfec
 La corrección de la distorsión radial se evaluó con especial atención en las esquinas, ya que esta distorsión aumenta proporcionalmente con la distancia al centro óptico $(𝑟)$, lo que hace que dicha zona requiera el mayor desplazamiento de píxeles. Visualmente, la Figura 2 confirma el éxito, mostrando que las líneas del tablero, que en la imagen original se curvaban hacia el interior (distorsión de tipo cojín), ahora son segmentos perfectamente rectos y paralelos, incluso en los bordes extremos. Esta corrección robusta está respaldada por el bajo error RMS de reproyección $(0.495 px)$, lo que indica que la predicción de la posición de cada punto, incluidos los de las esquinas, se logró con una precisión subpíxel.
 
 
+## 2. Transformaciones de intensidad a nivel de píxel
+### Objetivo
+Comparar y analizar el efecto de transformaciones de intensidad a nivel de píxel entre dos imágenes de la misma escena bajo distintas condiciones de iluminación.
+### Metodología aplicada (pasos)
+1. Cargar ambas imágenes en formato BGR con OpenCV.
+2. Convertir a escala de grises usando la fórmula de luminosidad (0.21 R + 0.72 G + 0.07 B).
+3. Implementar y aplicar ajuste de brillo en grises (suma con saturación), medir medias antes y después.
+4. Implementar ajuste de contraste en grises (centrado en 128 y escalado), visualizar resultados.
+5. Aplicar corrección gamma en grises con gamma <1 y >1 para observar aclarado/oscurecimiento.
+6. Implementar operaciones aritméticas pixel a pixel: suma, resta, multiplicación y división (con protecciones numéricas).
+7. Repetir pasos(3-7) en el dominio RGB aplicando operaciones por canal y recombinar.
+
+### Código y funciones clave (referencia)
+Las funciones y pasos principales se encuentran en el notebook `Taller1.ipynb`. A modo de referencia rápida:
+
+- Carga de imágenes:
+  - `fachadaDia = cv2.imread(base_path + "fachada_dia.jpeg")`
+  - `fachadaNoche = cv2.imread(base_path + "fachada_noche.jpeg")`
+- Visualización:
+  - `mostrar_imagenes_color(imagen1, imagen2, titulo1, titulo2)`
+  - `mostrar_imagenes_grises(imagen1, imagen2, titulo1, titulo2)`
+- Conversión a escala de grises:
+  - `fachada_dia_grises = np.dot(fachadaDia[...,:3], [0.21, 0.72, 0.07])`
+- Saturación segura de píxeles:
+  - `saturar_imagen(imagen)` (asegura rango [0,255], devuelve uint8)
+- Brillo (grises):
+  - `ajustar_brillo_imagen(imagen, valor_brillo)` (usa int16 y saturación)
+  - Ejemplos: -70 (día), +60 (noche)
+- Contraste (grises):
+  - `ajustar_contraste_imagen(imagen, factor_contraste)` — (I-128)*factor + 128
+  - Ejemplo: factor 1.5
+- Gamma (grises):
+  - `corregir_gama_imagen(imagen, gamma)` — 255 * (I/255)**gamma
+  - Ejemplos: gamma=0.7 (aclara), gamma=1.5 (oscurece)
+- Operaciones aritméticas (grises):
+  - `suma_imagenes`, `resta_imagenes`, `multiplicacion_imagenes`, `division_imagenes`
+  - Precauciones: tipos int16/float32 y reescalado; evitar división por cero
+- Equivalentes en RGB:
+  - `ajuste_brillo_imagen_rgb`, `ajuste_contraste_imagen_rgb`, `ajuste_gama_imagen_rgb`
+  
+### Parámetros usados en ejemplos del notebook
+- Conversión a gris: 
+  - coeficientes [0.21, 0.72, 0.07]
+  - Brillo : día -70, noche +60
+  - Contraste: factor 1.5
+  - Gamma : 0.7 (aclara), 1.5 (oscurece)
+- RGB : 
+  - Brillo día (-80, -20, -20), noche (60, 20, 20)
+  - Contraste RGB (ejemplo): (1.5, 1.2, 1.2)
+  - Gamma RGB (ejemplos): (0.7,0.7,0.7) aclara; (2.5,1.5,1.5) oscurece
+
+### Resultados y observaciones
+- Escala de grises: la imagen nocturna presenta la mayor concentración de píxeles en intensidades bajas; la diurna en medias-altas.
+- Brillo: la operación desplaza la media de intensidad en la dirección esperada; se observan zonas saturadas si el valor es extremo.
+- Contraste: el factor multiplicativo alrededor de 128 estira/comprime la distribución de intensidades, aumentando la separación entre tonos.
+- Gamma: gamma<1 aclara los tonos oscuros y media, gamma>1 oscurece.
+- Operaciones aritméticas:
+  - Suma: tendencia a saturación en zonas brillantes conjuntas.
+  - Resta: útil para resaltar diferencias (sombra / iluminación) entre dos tomas.
+  - Multiplicación: actúa como máscara .
+  - División: amplifica diferencias, sensible a valores cercanos a cero .
+- En RGB, operar por canal permite corrección cromática (p.ej. reducir dominante azul del cielo), pero hay que vigilar cambios de tono no deseados.
 
 ## 3. Implementar y aplicar transformaciones de rotación y traslación
 
