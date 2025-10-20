@@ -274,6 +274,7 @@ transformar_imagen("../images/Imagen_gif.jpeg", "transformaciones.gif")
 
 ### **Resultados**
 
+### Gif generado
 ![Secuencia de Transformaciones Geométricas](Notebooks/transformaciones.gif)
 
 - Se generó correctamente el archivo **`transformaciones.gif`**, mostrando la secuencia de transformaciones aplicadas sobre la imagen original.  
