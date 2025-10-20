@@ -365,6 +365,24 @@ Además, la función implementa un mecanismo de **control de ejecución** que ev
 - La creación de un lienzo de fondo mayor garantiza que la imagen transformada siempre se mantenga visible.  
 - El GIF permite visualizar la evolución progresiva de la imagen, siendo útil para comprender los efectos de cada transformación.
 
+## 4. Distribución de intensidades y ecualización del histograma
+### Objetivo
+- Comparar histogramas antes y después de la ecualización y analizar los efectos sobre imágenes de día y de noche.
+### Metodología aplicada (pasos)
+1. Tomar dos imágenes de la misma escena (fachada) en condiciones de día y noche.
+2. Convertir ambas a escala de grises usando la fórmula de luminosidad (si no están ya en float/int apropiado).
+3. Implementar ecualización por Función de Distribución Acumulativa (CDF):
+   - Calcular histograma de 256 bins.
+   - Calcular CDF y normalizar a 0-255 (enmascarando ceros para evitar divisiones por cero si hay intensidades no presentes).
+   - Mapear los valores de la imagen con la CDF normalizada.
+4. Para color, convertir BGR -> HSV, ecualizar V con `cv2.equalizeHist`, y volver a BGR.
+5. Calcular y mostrar histogramas antes y después de la ecualización (grises y RGB).
+6. Interpretar resultados visuales y estadísticos.
+### Resultados 
+* ¿Qué diferencias hay entre los histogramas de la imagen tomada de día y la imagen tomada de noche? 
+  - La imagen de día presenta un histograma más distribuido hacia las intensidades altas, reflejando mayor luminosidad y contraste. En contraste, la imagen de noche muestra un histograma concentrado en las intensidades bajas, indicando predominancia de sombras .
+* ¿Cuáles son las transformaciones de ecualización en cada caso?
+  - En la imagen de día, la ecualización tiende a expandir el rango de intensidades, realzando detalles en las áreas iluminadas. En la imagen de noche, la ecualización busca equilibrar las intensidades, sacando a la luz detalles en las sombras.
 
 ## 5. Implementar técnicas fundamentales de segmentación de imágenes.
 Capturen una escena con objetos de colores distintos de la Universidad Nacional o de la oficina de alguno de los integrantes del equipo. Debe ser con una cámara de un teléfono celular.
