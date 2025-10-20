@@ -121,6 +121,181 @@ La corrección de la distorsión radial se evaluó con especial atención en las
 
 
 
+## 3. Implementar y aplicar transformaciones de rotación y traslación
+
+Carguen una imagen, apliquen 5–8 transformaciones sucesivas (traslaciones, rotaciones, escalas), generen un **GIF animado o video** mostrando la secuencia y guarden cada frame intermedio.
+
+---
+
+### **Solución**
+
+Para este punto se desarrolló una función en **Python** que aplica una serie de transformaciones geométricas —rotación, traslación y escala— sobre una imagen base, generando una secuencia de frames y un **GIF animado** que muestra el proceso de transformación paso a paso.
+
+---
+
+### **Fundamento Teórico**
+
+Las transformaciones geométricas son operaciones fundamentales en el procesamiento digital de imágenes, ya que permiten modificar la posición, orientación o tamaño de los objetos dentro de una escena.
+
+**a. Traslación:**  
+Desplaza una imagen una distancia \((t_x, t_y)\) sobre los ejes X y Y:
+
+\[
+x' = x + t_x, \quad y' = y + t_y
+\]
+
+**b. Rotación:**  
+Gira la imagen un ángulo \(\theta\) respecto a un punto de referencia:
+
+\[
+\begin{bmatrix}
+x' \\ y'
+\end{bmatrix}
+=
+\begin{bmatrix}
+\cos(\theta) & -\sin(\theta) \\
+\sin(\theta) & \cos(\theta)
+\end{bmatrix}
+\begin{bmatrix}
+x \\ y
+\end{bmatrix}
+\]
+
+**c. Escalamiento:**  
+Aumenta o reduce el tamaño de una imagen según un factor \(s\):
+
+\[
+x' = s_x \cdot x, \quad y' = s_y \cdot y
+\]
+
+Combinadas, estas operaciones permiten realizar transformaciones afines que preservan las líneas y proporciones de la imagen original.
+
+---
+
+### **Metodología**
+
+Se utilizó **Python 3** con las librerías **Pillow (PIL)** e **ImageIO** para el procesamiento y la generación del GIF.  
+El flujo de trabajo general fue el siguiente:
+
+1. **Carga de la imagen original:**  
+   Se abre y convierte la imagen a modo RGBA para permitir transparencia y manipulación de capas.
+
+2. **Definición de las transformaciones:**  
+   Se estableció una lista de transformaciones que incluyen diferentes ángulos de rotación, desplazamientos (traslaciones) y factores de escala.
+
+3. **Aplicación de transformaciones sucesivas:**  
+   Cada transformación se aplica sobre la imagen original. Luego, la imagen transformada se coloca sobre un fondo blanco para mantener consistencia visual.
+
+4. **Generación y almacenamiento de frames:**  
+   Cada paso se guarda como un frame en formato PNG dentro de una carpeta temporal (`frames_temp`).
+
+5. **Creación del GIF animado:**  
+   Los frames se combinan con `imageio.mimsave()` para formar un GIF con duración de 0.5 segundos por frame y bucle infinito.
+
+---
+
+### **Código Implementado**
+
+```python
+from PIL import Image
+import imageio
+import os
+import numpy as np
+
+def transformar_imagen(ruta_imagen, salida_gif="animacion.gif"):
+    carpeta_frames = "frames_temp"
+
+    # Si ya existen los resultados, no ejecutar la función
+    if os.path.exists(carpeta_frames) and os.path.exists(salida_gif):
+        print("Las carpetas y el GIF ya existen. No se ejecutará la función.")
+        return
+
+    # Crear carpeta temporal para los frames (solo si no existe)
+    os.makedirs(carpeta_frames, exist_ok=True)
+
+    # Cargar imagen original
+    img_original = Image.open(ruta_imagen).convert("RGBA")
+    ancho, alto = img_original.size
+
+    # Lista para guardar los frames
+    frames = []
+
+    # Definir transformaciones (rotación, traslación, escala)
+    transformaciones = [
+        {"rot": 0,   "tx": 0,  "ty": 0,  "scale": 1.0},
+        {"rot": 15,  "tx": 20, "ty": 0,  "scale": 1.1},
+        {"rot": 30,  "tx": 40, "ty": 10, "scale": 1.2},
+        {"rot": 60,  "tx": 60, "ty": 20, "scale": 1.1},
+        {"rot": 90,  "tx": 80, "ty": 40, "scale": 0.9},
+        {"rot": 120, "tx": 60, "ty": 60, "scale": 0.8},
+        {"rot": 150, "tx": 40, "ty": 80, "scale": 0.9},
+        {"rot": 180, "tx": 0,  "ty": 100,"scale": 1.0},
+    ]
+
+    for i, t in enumerate(transformaciones):
+        # Aplicar escala
+        nuevo_ancho = int(ancho * t["scale"])
+        nuevo_alto = int(alto * t["scale"])
+        img_transformada = img_original.resize((nuevo_ancho, nuevo_alto))
+
+        # Aplicar rotación
+        img_transformada = img_transformada.rotate(t["rot"], expand=True)
+
+        # Crear fondo blanco
+        fondo = Image.new("RGBA", (ancho * 2, alto * 2), (255, 255, 255, 255))
+
+        # Calcular posición
+        x = ancho // 2 + t["tx"]
+        y = alto // 2 + t["ty"]
+
+        # Pegar imagen transformada
+        fondo.paste(img_transformada, (x, y), img_transformada)
+
+        # Guardar frame
+        frame_path = os.path.join(carpeta_frames, f"frame_{i:02d}.png")
+        fondo.save(frame_path)
+        frames.append(imageio.v3.imread(frame_path))
+
+    # Crear GIF con loop infinito
+    imageio.mimsave(salida_gif, frames, duration=0.5, loop=0)
+
+    print(f"GIF generado correctamente: {salida_gif}")
+    print(f"Frames guardados en: {os.path.abspath(carpeta_frames)}")
+
+# Ejemplo de uso
+transformar_imagen("../images/Imagen_gif.jpeg", "transformaciones.gif")
+```
+
+---
+
+### **Resultados**
+
+- Se generó correctamente el archivo **`transformaciones.gif`**, mostrando la secuencia de transformaciones aplicadas sobre la imagen original.  
+- Los frames intermedios fueron almacenados en la carpeta **`frames_temp`**, permitiendo su inspección individual.
+- El movimiento obtenido refleja un cambio progresivo en posición, tamaño y orientación de la figura, generando una animación fluida y continua.
+
+**Archivos generados:**
+```
+frames_temp/frame_00.png
+frames_temp/frame_01.png
+...
+frames_temp/frame_07.png
+transformaciones.gif
+```
+
+---
+
+### **Análisis**
+
+El resultado demuestra la correcta aplicación de transformaciones afines en el plano bidimensional.  
+Al combinar **rotación**, **traslación** y **escala**, se observa un efecto dinámico que simula movimiento.  
+Además, la función implementa un mecanismo de **control de ejecución** que evita repetir cálculos si los archivos ya existen, optimizando el flujo de trabajo.
+
+**Aspectos destacados:**
+- El uso de `expand=True` en la rotación evita recortes de la imagen.  
+- La creación de un lienzo de fondo mayor garantiza que la imagen transformada siempre se mantenga visible.  
+- El GIF permite visualizar la evolución progresiva de la imagen, siendo útil para comprender los efectos de cada transformación.
+
 
 ## 5. Implementar técnicas fundamentales de segmentación de imágenes.
 Capturen una escena con objetos de colores distintos de la Universidad Nacional o de la oficina de alguno de los integrantes del equipo. Debe ser con una cámara de un teléfono celular.
@@ -206,3 +381,8 @@ Szeliski, R. (2021). Computer Vision: Algorithms and Applications (2.ª ed.). Sp
 HTML Color Codes. (2025). HTML Color Codes. Recuperado el 19 de octubre de 2025, de https://htmlcolorcodes.com/es/
 
 Jardín Botánico de Medellín. (2024). *Ficha técnica: Phalaenopsis amabilis*. Recuperado de https://www.jardinbotanicomedellin.org/orquideas/phalaenopsis
+
+
+Gonzalez, R. C., & Woods, R. E. (2018). *Digital Image Processing (4th Edition)*. Pearson.  
+Pillow Documentation: [https://pillow.readthedocs.io](https://pillow.readthedocs.io)  
+ImageIO Documentation: [https://imageio.readthedocs.io](https://imageio.readthedocs.io)
